@@ -1,3 +1,4 @@
+import 'package:finch_chat/utils/pages.dart';
 import 'package:finch_chat/utils/theme.dart';
 import 'package:flutter/material.dart';
 
@@ -28,39 +29,26 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int selectedIndex = 0;
-
-  String _getCurrentPageTitle(String title) {
-    switch (selectedIndex) {
-      case 0:
-        return '$title - Home Page';
-      case 1:
-        return '$title - Settings Page';
-      case 2:
-        return '$title - Logout Confirmation';
-      default:
-        return title; // Fallback title
-    }
-  }
+  String selectedPageName = "Home";
 
   Widget _buildBody() {
     // Return different widgets based on the selected index
-    switch (selectedIndex) {
-      case 0:
+    switch (selectedPageName) {
+      case "Home":
         return Center(
           child: Text(
             'Welcome to the Home Page!',
             style: Theme.of(context).textTheme.headlineMedium,
           ),
         );
-      case 1:
+      case "Settings":
         return Center(
           child: Text(
             'Application Settings',
             style: Theme.of(context).textTheme.headlineMedium,
           ),
         );
-      case 2:
+      case "Logout":
         // Placeholder for Logout - often this triggers navigation or an action
         return Center(
           child: Column(
@@ -101,7 +89,10 @@ class _MyHomePageState extends State<MyHomePage> {
         // Use the primary color from the theme for the AppBar background
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         title: Text(
-          _getCurrentPageTitle(widget.title),
+          getCurrentPageTitle(
+            selectedPageName: selectedPageName,
+            baseTitle: widget.title,
+          ),
         ), // Use the title passed to the widget
       ),
       drawer: Drawer(
@@ -134,7 +125,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   Text(
                     'Finch Chat', // App name in Drawer
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimary,
+                      color: Theme.of(context).colorScheme.surfaceBright,
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
@@ -144,26 +135,36 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             ListTile(
               leading: const Icon(Icons.home),
-              title: const Text('Home'),
-              selected: selectedIndex == 0,
-              selectedTileColor: Theme.of(
-                context,
-              ).colorScheme.primary.withOpacity(0.1),
+              title: Text(
+                'Home',
+                style:
+                    selectedPageName == "Home"
+                        ? TextStyle(color: Colors.white)
+                        : TextStyle(color: Colors.black),
+              ),
+              selected: selectedPageName == "Home",
+              selectedTileColor: finchChatTheme.colorScheme.outline,
               onTap: () {
                 setState(() {
-                  selectedIndex = 0;
+                  selectedPageName = "Home";
                 });
                 Navigator.pop(context); // Close the drawer
               },
             ),
             ListTile(
               leading: const Icon(Icons.settings),
-              title: const Text('Settings'),
-              selected: selectedIndex == 1,
-              selectedTileColor: finchChatTheme.colorScheme.primary,
+              title: Text(
+                'Settings',
+                style:
+                    selectedPageName == "Settings"
+                        ? TextStyle(color: Colors.white)
+                        : TextStyle(color: Colors.black),
+              ),
+              selected: selectedPageName == "Settings",
+              selectedTileColor: finchChatTheme.colorScheme.outline,
               onTap: () {
                 setState(() {
-                  selectedIndex = 1;
+                  selectedPageName = "Settings";
                 });
                 Navigator.pop(context); // Close the drawer
               },
@@ -171,13 +172,19 @@ class _MyHomePageState extends State<MyHomePage> {
             const Divider(),
             ListTile(
               leading: const Icon(Icons.logout),
-              title: const Text('Logout'),
-              selected: selectedIndex == 2,
-              selectedTileColor: finchChatTheme.colorScheme.primary,
+              title: Text(
+                'Logout',
+                style:
+                    selectedPageName == "Logout"
+                        ? TextStyle(color: Colors.white)
+                        : TextStyle(color: Colors.black),
+              ),
+              selected: selectedPageName == "Logout",
+              selectedTileColor: finchChatTheme.colorScheme.outline,
               onTap: () {
                 // Select the logout "page" for now
                 setState(() {
-                  selectedIndex = 2;
+                  selectedPageName = "Logout";
                 });
                 Navigator.pop(context); // Close the drawer
               },
