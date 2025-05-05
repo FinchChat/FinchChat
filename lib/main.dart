@@ -1,6 +1,9 @@
-import 'package:finch_chat/utils/pages.dart';
+import 'package:finch_chat/screens/home.dart';
+import 'package:finch_chat/screens/logout.dart';
+
 import 'package:finch_chat/utils/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:finch_chat/screens/settings.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +17,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Finch Chat',
       theme: finchChatTheme,
-      home: const MyHomePage(title: 'Finch Chat'),
+      initialRoute: '/',
+
+      routes: {
+        // Define the settings route
+        '/': (context) => const MyHomePage(title: 'Finch Chat'), // Main layout
+        SettingsScreen.routeName: (context) => const SettingsScreen(),
+        LogoutScreen.routeName: (context) => const LogoutScreen(),
+      },
     );
   }
 }
@@ -29,57 +39,39 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String selectedPageName = "Home";
+  void _handleLogout(BuildContext context) {
+    // Optional: Show confirmation dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: const Text('Confirm Logout'),
+          content: const Text('Are you sure you want to log out?'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(dialogContext).pop(); // Close the dialog
+              },
+            ),
+            TextButton(
+              child: const Text('Logout'),
+              onPressed: () {
+                Navigator.of(dialogContext).pop(); // Close the dialog
+                // Perform actual logout logic here (clear tokens, etc.)
 
-  Widget _buildBody() {
-    // Return different widgets based on the selected index
-    switch (selectedPageName) {
-      case "Home":
-        return Center(
-          child: Text(
-            'Welcome to the Home Page!',
-            style: Theme.of(context).textTheme.headlineMedium,
-          ),
+                // Navigate to Login screen and remove all previous routes
+                Navigator.pushNamedAndRemoveUntil(
+                  context, // Use the main context from build method
+                  LogoutScreen.routeName,
+                  (Route<dynamic> route) => false, // Remove all routes
+                );
+              },
+            ),
+          ],
         );
-      case "Settings":
-        return Center(
-          child: Text(
-            'Application Settings',
-            style: Theme.of(context).textTheme.headlineMedium,
-          ),
-        );
-      case "Logout":
-        // Placeholder for Logout - often this triggers navigation or an action
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Logout Selected',
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  // Implement actual logout logic here
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Logout Action Triggered!')),
-                  );
-                  // Example: Navigate to login screen or clear session
-                },
-                child: const Text('Confirm Logout'),
-              ),
-            ],
-          ),
-        );
-      default:
-        return Center(
-          child: Text(
-            'Unknown Page',
-            style: Theme.of(context).textTheme.headlineMedium,
-          ),
-        );
-    }
+      },
+    );
   }
 
   @override
@@ -88,12 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         // Use the primary color from the theme for the AppBar background
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-        title: Text(
-          getCurrentPageTitle(
-            selectedPageName: selectedPageName,
-            baseTitle: widget.title,
-          ),
-        ), // Use the title passed to the widget
+        title: Text(widget.title),
       ),
       drawer: Drawer(
         child: ListView(
@@ -101,31 +88,28 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             DrawerHeader(
               decoration: BoxDecoration(
-                // Use a theme color for the Drawer header
                 color: finchChatTheme.colorScheme.primary,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment:
-                    MainAxisAlignment.center, // Center content vertically
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(
-                    'assets/images/logo.png', // Ensure this path is correct
+                    'assets/images/logo.png', // Ensure path is correct
                     height: 60,
                     errorBuilder: (context, error, stackTrace) {
-                      // Placeholder if image fails to load
-                      return const Icon(
+                      return Icon(
                         Icons.image_not_supported,
                         size: 60,
-                        color: Colors.white,
+                        color: finchChatTheme.colorScheme.onPrimary,
                       );
                     },
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    'Finch Chat', // App name in Drawer
+                    'Finch Chat',
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.surfaceBright,
+                      color: finchChatTheme.colorScheme.onPrimary,
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
@@ -135,65 +119,38 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             ListTile(
               leading: const Icon(Icons.home),
-              title: Text(
-                'Home',
-                style:
-                    selectedPageName == "Home"
-                        ? TextStyle(color: Colors.white)
-                        : TextStyle(color: Colors.black),
-              ),
-              selected: selectedPageName == "Home",
-              selectedTileColor: finchChatTheme.colorScheme.outline,
+              title: const Text('Home'),
+              // No selection state needed here
               onTap: () {
-                setState(() {
-                  selectedPageName = "Home";
-                });
+                // If already on home ('/'), just close drawer
+                // If you implement nested routing later, might need Navigator.popUntil('/')
                 Navigator.pop(context); // Close the drawer
               },
             ),
             ListTile(
               leading: const Icon(Icons.settings),
-              title: Text(
-                'Settings',
-                style:
-                    selectedPageName == "Settings"
-                        ? TextStyle(color: Colors.white)
-                        : TextStyle(color: Colors.black),
-              ),
-              selected: selectedPageName == "Settings",
-              selectedTileColor: finchChatTheme.colorScheme.outline,
+              title: const Text('Settings'),
+              // No selection state needed here
               onTap: () {
-                setState(() {
-                  selectedPageName = "Settings";
-                });
                 Navigator.pop(context); // Close the drawer
+                Navigator.pushNamed(context, SettingsScreen.routeName);
               },
             ),
             const Divider(),
             ListTile(
               leading: const Icon(Icons.logout),
-              title: Text(
-                'Logout',
-                style:
-                    selectedPageName == "Logout"
-                        ? TextStyle(color: Colors.white)
-                        : TextStyle(color: Colors.black),
-              ),
-              selected: selectedPageName == "Logout",
-              selectedTileColor: finchChatTheme.colorScheme.outline,
+              title: const Text('Logout'),
+              // No selection state needed here
               onTap: () {
-                // Select the logout "page" for now
-                setState(() {
-                  selectedPageName = "Logout";
-                });
-                Navigator.pop(context); // Close the drawer
+                Navigator.pop(context); // Close the drawer first
+                _handleLogout(context); // Call the logout handler
               },
             ),
           ],
         ),
       ),
-      // Use the helper method to build the body dynamically
-      body: _buildBody(),
+      // Body now displays the default "Home" content
+      body: const HomeScreen(), // Directly use the HomeScreen widget
     );
   }
 }
