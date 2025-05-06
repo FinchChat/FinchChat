@@ -4,9 +4,16 @@ import 'package:finch_chat/screens/logout.dart';
 import 'package:finch_chat/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:finch_chat/screens/settings.dart';
+import 'package:finch_chat/models/api_config_viewmodel.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ApiConfigViewModel(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -79,8 +86,12 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         // Use the primary color from the theme for the AppBar background
-        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-        title: Text(widget.title),
+        backgroundColor: finchChatTheme.colorScheme.primary,
+        iconTheme: IconThemeData(color: finchChatTheme.colorScheme.onPrimary),
+        title: Text(
+          widget.title,
+          style: TextStyle(color: finchChatTheme.colorScheme.onPrimary),
+        ),
       ),
       drawer: Drawer(
         child: ListView(
