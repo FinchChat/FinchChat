@@ -4,7 +4,7 @@ import 'package:finch_chat/screens/logout.dart';
 import 'package:finch_chat/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:finch_chat/screens/settings.dart';
-import 'package:finch_chat/models/api_config_viewmodel.dart';
+import 'package:finch_chat/view_models/api_config_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 void main() {

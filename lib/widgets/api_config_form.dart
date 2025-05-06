@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import './api_config.dart';
-import './api_config_viewmodel.dart'; // Adjust import path
-import './api_service_type.dart';
-import './api_header.dart';
+import '../models/api_config.dart';
+import '../view_models/api_config_viewmodel.dart'; // Adjust import path
+import '../models/api_service_type.dart';
+import '../models/api_header.dart';
 
 class ApiConfigForm extends StatefulWidget {
   final ApiConfig? initialConfig; // Null if adding new

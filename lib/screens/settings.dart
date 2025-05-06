@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/api_config.dart';
-import '../models/api_config_viewmodel.dart';
-import '../models/api_config_form.dart'; // Adjust import paths
+import '../view_models/api_config_viewmodel.dart';
+import '../widgets/api_config_form.dart'; // Adjust import paths
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});

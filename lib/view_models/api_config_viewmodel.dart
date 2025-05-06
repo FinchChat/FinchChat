@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import './api_config.dart';
-import './api_config_service.dart'; // Adjust import path
+import '../models/api_config.dart';
+import '../models/api_config_service.dart'; // Adjust import path
 
 class ApiConfigViewModel extends ChangeNotifier {
   final ApiConfigService _apiConfigService = ApiConfigService();
