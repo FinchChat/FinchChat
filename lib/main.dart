@@ -46,41 +46,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  void _handleLogout(BuildContext context) {
-    // Optional: Show confirmation dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          title: const Text('Confirm Logout'),
-          content: const Text('Are you sure you want to log out?'),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () {
-                Navigator.of(dialogContext).pop(); // Close the dialog
-              },
-            ),
-            TextButton(
-              child: const Text('Logout'),
-              onPressed: () {
-                Navigator.of(dialogContext).pop(); // Close the dialog
-                // Perform actual logout logic here (clear tokens, etc.)
-
-                // Navigate to Login screen and remove all previous routes
-                Navigator.pushNamedAndRemoveUntil(
-                  context, // Use the main context from build method
-                  LogoutScreen.routeName,
-                  (Route<dynamic> route) => false, // Remove all routes
-                );
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -154,7 +119,7 @@ class _MyHomePageState extends State<MyHomePage> {
               // No selection state needed here
               onTap: () {
                 Navigator.pop(context); // Close the drawer first
-                _handleLogout(context); // Call the logout handler
+                Navigator.pushNamed(context, LogoutScreen.routeName);
               },
             ),
           ],
